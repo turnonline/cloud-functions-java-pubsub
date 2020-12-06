@@ -22,7 +22,7 @@
     </scm>
 
     <issueManagement>
-        <url>https://youtrack.turnonline.biz/youtrack/issues/TOB</url>
+        <url>https://github.com/turnonline/cloud-functions-java-pubsub/issues</url>
     </issueManagement>
 
     <developers>
