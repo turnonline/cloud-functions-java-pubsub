@@ -1,0 +1,5 @@
+{
+    "service": "pubsub.googleapis.com",
+    "name": "projects/gcp_project_id/topics/my-topic-name",
+    "type": "type.googleapis.com/google.pubsub.v1.PubsubMessage"
+}
