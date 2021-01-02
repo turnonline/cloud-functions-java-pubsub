@@ -3,10 +3,11 @@ package biz.turnonline.ecosystem.skeleton;
 import com.google.cloud.functions.BackgroundFunction;
 import com.google.cloud.functions.Context;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.logging.Logger;
 
 /**
  * Entry point that listens for Pub/Sub message.
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 public class FunctionSkeleton
         implements BackgroundFunction<PubSubMessage>
 {
-    private static final Logger LOGGER = Logger.getLogger( FunctionSkeleton.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( FunctionSkeleton.class.getName() );
 
     private final Gson gson;
 
