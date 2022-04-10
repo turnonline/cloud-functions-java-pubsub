@@ -2,17 +2,19 @@ package biz.turnonline.ecosystem.skeleton;
 
 import com.google.cloud.functions.Context;
 import com.google.gson.Gson;
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Tested;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+
+import static org.mockito.Mockito.when;
 
 /**
  * {@link FunctionSkeleton} unit testing.
@@ -23,34 +25,22 @@ public class FunctionSkeletonTest
 {
     private final String resourceAsJson = readString( "resource.json" );
 
-    @Tested
+    @InjectMocks
     private FunctionSkeleton tested;
 
-    @Mocked
+    @Mock
     private Context context;
 
     @BeforeEach
     public void before()
     {
-        new Expectations()
-        {
-            {
-                context.attributes();
-                result = new HashMap<>();
+        MockitoAnnotations.openMocks( this );
 
-                context.eventId();
-                result = "1646358556781447";
-
-                context.eventType();
-                result = "google.pubsub.topic.publish";
-
-                context.resource();
-                result = resourceAsJson;
-
-                context.timestamp();
-                result = "2020-12-06T07:00:22.236Z";
-            }
-        };
+        when( context.attributes() ).thenReturn( new HashMap<>() );
+        when( context.eventId() ).thenReturn( "1646358556781447" );
+        when( context.eventType() ).thenReturn( "google.pubsub.topic.publish" );
+        when( context.resource() ).thenReturn( resourceAsJson );
+        when( context.timestamp() ).thenReturn( "2020-12-06T07:00:22.236Z" );
     }
 
     @Test

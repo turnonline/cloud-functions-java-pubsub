@@ -17,7 +17,7 @@ import java.util.Base64;
 public class FunctionSkeleton
         implements BackgroundFunction<PubSubMessage>
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger( FunctionSkeleton.class.getName() );
+    private static final Logger LOGGER = LoggerFactory.getLogger( FunctionSkeleton.class );
 
     private final Gson gson;
 
@@ -35,15 +35,17 @@ public class FunctionSkeleton
         LOGGER.info( context.resource() );
         LOGGER.info( context.timestamp() );
 
-        String name;
-        if ( message != null && message.getData() != null )
+        if ( message.getData() == null || message.getData().isBlank() )
         {
-            name = new String( Base64.getDecoder()
-                    .decode( message
-                            .getData()
-                            .getBytes( StandardCharsets.UTF_8 ) ), StandardCharsets.UTF_8 );
-
-            LOGGER.info( name );
+            LOGGER.warn( "Message payload is missing " + context );
+            return;
         }
+
+        String json = new String( Base64.getDecoder()
+                .decode( message
+                        .getData()
+                        .getBytes( StandardCharsets.UTF_8 ) ), StandardCharsets.UTF_8 );
+
+        LOGGER.info( json );
     }
 }
