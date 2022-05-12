@@ -2,6 +2,7 @@ package biz.turnonline.ecosystem.skeleton;
 
 import com.google.cloud.functions.Context;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +26,8 @@ public class FunctionSkeletonTest
 {
     private final String resourceAsJson = readString( "resource.json" );
 
+    private AutoCloseable closeable;
+
     @InjectMocks
     private FunctionSkeleton tested;
 
@@ -34,13 +37,19 @@ public class FunctionSkeletonTest
     @BeforeEach
     public void before()
     {
-        MockitoAnnotations.openMocks( this );
+        closeable = MockitoAnnotations.openMocks( this );
 
         when( context.attributes() ).thenReturn( new HashMap<>() );
         when( context.eventId() ).thenReturn( "1646358556781447" );
         when( context.eventType() ).thenReturn( "google.pubsub.topic.publish" );
         when( context.resource() ).thenReturn( resourceAsJson );
         when( context.timestamp() ).thenReturn( "2020-12-06T07:00:22.236Z" );
+    }
+
+    @AfterEach
+    public void releaseMocks() throws Exception
+    {
+        closeable.close();
     }
 
     @Test
