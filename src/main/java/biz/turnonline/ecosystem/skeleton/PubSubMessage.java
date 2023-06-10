@@ -6,16 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Cloud Functions uses GSON to populate this object.
- * Field types/names are specified by Cloud Functions
- * Changing them may break your code!
- * <p>
- * Cloud Functions triggered from a Pub/Sub topic will be sent events conforming to the {@link PubSubMessage} type,
- * with the caveat that {@link PubSubMessage#publishTime} and {@link PubSubMessage#messageId}
- * are not directly available in the PubsubMessage.
- * Instead, you can access publishTime and messageId via the {@link Context#eventId()}
- * and {@link Context#timestamp()} properties of the event metadata.
- * </p>
+ * Cloud Functions Pub/Sub message structure.
  */
 public class PubSubMessage
 {

@@ -1,8 +1,9 @@
 package biz.turnonline.ecosystem.skeleton;
 
-import com.google.cloud.functions.BackgroundFunction;
-import com.google.cloud.functions.Context;
+import com.google.cloud.functions.CloudEventsFunction;
 import com.google.gson.Gson;
+import io.cloudevents.CloudEvent;
+import io.cloudevents.CloudEventData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,11 +12,10 @@ import java.util.Base64;
 
 /**
  * Entry point that listens for Pub/Sub message.
- *
- * @author <a href="mailto:medvegy@turnonline.biz">Aurel Medvegy</a>
+ * See <a href="https://cloudevents.io/">A specification for describing event data in a common way</a>.
  */
 public class FunctionSkeleton
-        implements BackgroundFunction<PubSubMessage>
+        implements CloudEventsFunction
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( FunctionSkeleton.class );
 
@@ -27,25 +27,20 @@ public class FunctionSkeleton
     }
 
     @Override
-    public void accept( PubSubMessage message, Context context )
+    public void accept( CloudEvent event ) throws Exception
     {
-        LOGGER.info( context.attributes().toString() );
-        LOGGER.info( context.eventId() );
-        LOGGER.info( context.eventType() );
-        LOGGER.info( context.resource() );
-        LOGGER.info( context.timestamp() );
-
-        if ( message.getData() == null || message.getData().isBlank() )
+        CloudEventData data = event.getData();
+        if ( data == null )
         {
-            LOGGER.warn( "Message payload is missing " + context );
+            LOGGER.warn( "Event's data is not provided" );
             return;
         }
 
-        String json = new String( Base64.getDecoder()
-                .decode( message
-                        .getData()
-                        .getBytes( StandardCharsets.UTF_8 ) ), StandardCharsets.UTF_8 );
+        String rawBody = new String( data.toBytes(), StandardCharsets.UTF_8 );
+        PubSubBody body = gson.fromJson( rawBody, PubSubBody.class );
+        byte[] decodedData = Base64.getDecoder().decode( body.getMessage().getData() );
+        String payload = new String( decodedData, StandardCharsets.UTF_8 );
 
-        LOGGER.info( json );
+        LOGGER.info( payload );
     }
 }
